@@ -1,0 +1,181 @@
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{hyperref}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\title{Course Outline}
+\subtitle{ASTR288P}
+\date{2017/09/01}
+\author{Sean Griffin}
+\institute{UMCP / NASA GSFC}
+\titlegraphic{\vfill\includegraphics[height=1cm]{figures/University_of_Maryland_Seal.png}}
+
+\newcommand{\ie}{\emph{i.e.}}
+\newcommand{\eg}{e.g.}
+\begin{document}
+
+\maketitle
+
+%\begin{frame}{Table of contents}
+%  \setbeamertemplate{section in toc}[sections numbered]
+%  \tableofcontents[hideallsubsections]
+%\end{frame}
+
+\begin{frame}[fragile]{About Me}
+	\begin{itemize}
+		\item Office: ATL 0251A
+		\item Office hours: Friday 1PM-2PM (before class)
+                \item Always confirm with be before coming for office hours!
+                \item astro email: sgriffin 
+		\item I'm actually based at NASA Goddard, so I'm not around on other days.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Course format}
+	\begin{itemize}
+		\item Homework: 
+		
+		We have them, they will be assigned as the course progresses ("natural stopping points").
+			
+		Generally due at the start of the following class.
+
+                There will be time to work on them in-class.
+                
+		\item End-of-term project and presentation in place of a final written exam.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Resources}
+	Books: Is that like the Internet but made out of a tree? 
+	
+	Online: 
+	\begin{itemize}
+		\item Wikipedia
+		\item \url{http://www.stackoverflow.com} Any Questions
+		\item \url{http://www.codecademy.com} Python, Git, ...
+		\item \url{http://tutorialspoint.com/cprogramming} C language
+		\item \url{http://projecteuler.net} Challenging Problems
+   		\item \url{http://rosettacode.org/wiki/Averages/Arithmetic_mean}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{What we'll cover (more advanced topics)}
+
+    \begin{itemize}
+    	\item UNIX:
+    	\begin{itemize}
+    		\item Shell (we will use \textbf{bash} but others exist), shell scripting
+    		\item File system (/, /usr/bin, \$HOME, etc.)
+    		\item Window managers, desktop environments
+    		\item Editors (\textbf{emacs}, vi, gedit, pico, \textbf{sublime}, many others) -- people have strong opinions but I do not!
+    		\item Base commands (\textbf{cd, mkdir, ls, ssh}...)
+		\item Tools (\textbf{git}, gcc, )
+    	\end{itemize}
+    	\item Scripting
+    	\begin{itemize}
+    		\item Python
+    		\item ipython
+    		\item Jupyter
+    	\end{itemize}
+	\item Word processing with \LaTeX:
+	\begin{itemize}
+		\item Not included last time this course was taught but I think it's important to learn early on.
+		\item This document produced using \LaTeX.
+	\end{itemize}
+	
+	 \end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{What we'll cover}
+    \begin{itemize}	
+    	\item Some Object Oriented Programming (OOP)
+    	\item Compiled code
+    	\begin{itemize}
+    		\item C/C++, Makefiles
+    		\item FORTRAN is a thing that exists but we won't use it.
+    	\end{itemize}		
+    	
+    	\item Data analysis
+	\begin{itemize}
+		\item Compiling and running analysis code
+    		\item Analysis and plotting
+    	\end{itemize}		
+    
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{What we probably wont cover}
+
+	\begin{itemize}
+		\item Machine learning
+		\item Multi-threaded / parallel programming (OpenMP, MPI, CUDA)
+		\item ...
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Hardware}
+	Lab machines:
+	\begin{itemize}
+		\item Master: ursa.astro.umd.edu
+		\item Nodes: lab001, lab002, ... lab013
+		\item Printer: labs.astro.umd.edu
+	\end{itemize}
+
+
+	Virtual machines:
+	\begin{itemize}
+		\item \textbf{virtualbox}
+		\item vmware
+	\end{itemize}
+
+	Your own machine:
+	\begin{itemize}
+		\item Linux (Ubuntu, Redhat, Fedora, Mint, debian, gentoo...) -- 	You can dual-boot if you want. 
+		\item Mac OS X
+		\begin{itemize}
+			\item You need Xquartz installed so certain features will work. 
+		\end{itemize}
+		\item Windows -- Not recommended for this class
+		\begin{itemize}
+			\item putty, Windows10 bash, VNC viewer
+			\item Probably easier just to run a virtual machine (this is what I do!). 
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Virtualbox}
+
+  Virtualbox is a program that allows you to create and run virtual computeres within your host computer.
+
+  This is a handy alternative to dual-booting if you want to use both Linux and Windows (e.g. if you're a hardcore gamer but need *nix to do analysis for work).
+
+  You are effectively running an entire computer inside your OS, so performance can be an issue (particularly graphical stuff, although things are getting better).
+
+  We'll go through the process of creating a virtual machine and installing a Linux distribution on it. This will also fammiliarize you with the different aspects of a Linux installation.
+\end{frame}
+
+\begin{frame}[fragile]{Virtualbox}
+
+  I personally use Linux Mint 17.2, but you can (and should!) try other distributions.
+
+  Lots of different desktop versions: Cinnamon, MATE, GNOME 3, Unity, KDE...  
+  
+\end{frame}
+
+\end{document}
