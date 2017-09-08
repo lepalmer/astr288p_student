@@ -1,228 +1,31 @@
-# Lecture 2:  UNIX
-
-## Command Line unix vs. desktop unix (Graphical User Interface)
-
-  - GUI: a dime a dozen (and new ones keep coming...)
-  - GUI: Mac (aqua) and Linux (X11)
-  - GUI: Linux has many many window managers
-         (twm, fvwm, enlightenment, gnome, kde, unity, plasma)
-  - GUI: Linux is changing from using X11 to Wayland
-  - CLI: one and only one (though minor differences do remain between Mac and Linux)
-
-Shells can be **GUI** or **CLI** shells and act as an interface to the operating system's different services.
-
-The notes below loosely follow the tutorials in
-    http://www.ee.surrey.ac.uk/Teaching/Unix/
-you are recommended to walk yourself through these.
-
-## Login shell in a terminal: 
-  - xterm                  (probably the oldest terminal in X11)
-  - gnome-terminal         (Gnome Terminal)
-  - xfce4-terminal         (XFCE4 terminal)
-  - konsole                (KDE terminal)
-  - emacs "M-x shell"      (yes, you can run a terminal inside of emacs, great for logging)
+Lecture 2:  More on UNIX
+================
 
 
-### What shells can we use? 
-
-There are many CLI shells avaialble. Some exambles:
-
-  - bash  (sh: bourne shell)
-  - tcsh  (csh: C-shell)
-  - ksh   (korn shell)
-  - xonsh (pythonesque shell, cf. ipython)
-
-We will be using **bash**.
-
-   Q2-1: how do you know which shell you are running?
-
-   A2-1: as is often in UNIX, several answers possible, that all need human parsing
-   - **echo $SHELL** 
-   - **grep $USER /etc/passwd**
-   - **ps**
-   
-   Q2-2: What are the allowed shells on your unix system?
-   
-   A2-2: **cat /etc/shells**
-
-   Q2-3: If a shell is not listed in **/etc/shells**, can I still use it?
-
-   A2-3: yes, simply run it from the current shell (a shell within a shell; see A1)
-
-### Changing your default shell
-
-In this class, we will use **bash**, although in the future you may decide to use another default shell.
-To change your default shell, type 
+## Updating your *astr288p* repo
+Any time you need to update your **astr288p** git repo, the **git pull** command will do this:
 ```
-chsh -s /bin/bash
+   cd ~/ASTR288P/astr288p_student      # make sure you are in one of the 'astr288p' directories
+   git status                 		   # first make  sure you don't have anything modified
+   git pull                            # warnings are possible here if there are conflicts
 ```
-
-For this to take effect, you need to open a new terminal!
-
-### Shell options (as defined in /etc/passwd, see /etc/shells)
-/etc/passwd contains essential information relevant for user login.
-An example line: 
-```
-tiberius:x:5091:500:Captain Kirk:/home/tiberius:/bin/tcsh
-```
-There's more information here than we need for the scope of this course, but the important fields are
-  - tiberius : User name.
-  - x is the password (it always comes up as 'x'; the actual encrypted password is stored elsewhere)
-  - 5091: User ID (UID)
-  - 500: Group ID (GID); we'll come back to this one later when we discuss file permissions
-  - Captain Kirk: This is a comment field.
-  - /home/tiberius/ : Path to a user's home directory when they log in.
-  - /bin/tcsh : This means that on login shell /bin/tcsh is used. This can also be a command, as opposed to a shell.
-
-CAVEAT: MacOS does not seem to use /etc/passwd (see http://docstore.mik.ua/orelly/unix3/mac/ch03_08.htm)
-
-
-### Persistent shells with session management (cf. VNC)
-If you don't need a full graphical interface, and still want to login to server (e.g. ursa) and maintain your session, use any of the following programs
-
-  - screen        (often comes with UNIX)
-  - tmux          (and there are more)
-
-**screen** is useful if (e.g.) you have some code taht takes a long time to execute and you don't want to have to keep the termainal open (say, if you're getting on an airplane).
-
-## bash
-We differentiate between an *interactive*  and *login* shell. They are controlled by one or more startup ("rc") files:
-   * login:
-      * /etc/profile
-      * ~/.bash_profile
-      * ~/.bash_login
-      * ~/.profile
-   * interactive
-     * /etc/bash.bashrc
-     * ~/.bashrc
-
-  Some of your personal files may already be present when your account was activated. Use
-  the **ls -a** command to see these hidden (files starting with a dot) files.
-
-  Q2-4:  With the **ls -a** command you will also see **.** and **..**    what are those?
-
-  A2-4:  The current directory **.** and the parent directory **..**
-
-### Linux and Mac philosophy on interactive and login shells different?
-
-This is often source of confusion and discussed online
-(e.g. see http://unix.stackexchange.com/questions/119627/why-are-interactive-shells-on-osx-login-shells-by-default)
-
-Here's a summary for Linux and Mac, and when they read the startup files (WARNING: they are not the same!)
-
-```
-  linux>  ssh localhost                                 # login
-  	  bash: .bash_profile                           # Q: what about .bash_login and .profile?
-	  tcsh: .cshrc .login                           # in that order
-	  
-  linux>  xterm (or open a gnome-terminal)              # interactive
-  	  bash: .bashrc
-	  tcsh: .cshrc
-
-  mac> ssh localhost                                    # login (enable in System Preferences -> Sharing -> Remote Login)
-       -> .bash_profile
-
-  mac> Terminal  (CMD-N)                                # login
-       -> .bash_profile                                 # if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
-       bash                                             # interactive
-       -> .bashrc 
-```
-
-If you use the **csh** variety, the **.login** and **.cshrc** files control which one is read for what type of session.
-
-## Files and Directories - Part 1:
-
-```
-  ls                  LiSt files
-  pwd                 Print Working Directory
-  whoami              Isn't that obvious?
-```
-
-## How to get more help for a given COMMAND:
-(this obviously means you know the name of the COMMAND)
-
-```
-  COMMAND --help
-  COMMAND --version
-  man COMMAND
-  info COMMAND
-
-  which COMMAND
-  whatis COMMAND
-  apropos COMMAND
-  <google>
-```  
-
-  Q2-5: man pages have sections (the -s option) to narrow down search
-
-## Files:  the "ls" command
-
-```
-  ls -l   # l for long 
-  ls -al # all long
-  ls -lt # long, sort by modification time
-  ls -ltr # long, sort by modification time, reverse order
-  ls -lt | tac 
-  ls --full-time #what does this one do? 
-```
-  Q2-6:  What is the '|' symbol doing? 
-
-  Q2-7:  What is the 'tac' command?
-
-  Q2-8:  What are '.' and '..' ?
-
-
-## Directories:
-
-```
-  pwd
-  mkdir ASTR288P
-  cd ASTR288P            (try typing just 'A' or "AS" and then <TAB>-complete)
-  pwd
-```
-
-## git: sharing your codes: a first encounter
-
-We will come back to **git**, but the following commands will download the "astr288p" repository of codes and documentation that are helpful for this class.
-```
-  git clone https://github.com/SeanCGriffin/astr288p_student
-  ls
-  cd astr288p_student
-  ls -la
-```
-But wait -- there's nothing but the course outline in the repository!
-
-I need to add the correct files to the repository.
-
-```
-    git add lectures/Lecture2.md
-    git commit
-    git push
-```
-
-Now, if we do 
-```
-    git pull
-```
-
-you should be able to see this doucment!
-
-This **Lecture2.md** file is the file you are reading now. Most humans can read it, but it does read a little nicer once it has been formatted by a web browser, instead of straight to the terminal! Or you can read it directly on github on
-https://github.com/SeanCGriffin/astr288p_student/blob/master/lectures/Lecture2.md
-  less lectures/Lecture2.md
+it would actually warn you if you had modified files that are also modified on the server. It will
+attempt a merge and warn you.  Files that you modified and are not modified on the server
 
 ## Creating Files:
 
-Although it does not matter where you do this, let us keep files in **~/ASTR288P**:
+Although it does not matter where you do this, let us keep class files in **~/ASTR288P**:
 ```
   cd ~/ASTR288P
+  mkdir lecture2
+  cd lecture2
 ```
   1) **touch**   (Zero Length file)
 ```
      touch Data0.txt
      mkdir data0.txt          (testing case sensitivity)
 ```
-  Q2-9: Notice on a Mac this last **mkdir** may have failed. Can you see why?
+  **Q2-1**: Notice on a Mac this last **mkdir** may have failed. Can you see why?
   
   2) **echo**
 ```
@@ -230,7 +33,7 @@ Although it does not matter where you do this, let us keep files in **~/ASTR288P
      echo Hello2   >  Data1.txt
      echo Hello3  >>  Data1.txt
 ```
-  Q2-10: Display the contents of this file using **cat Data1.txt**
+ **Q2-2**: Display the contents of this file using **cat Data1.txt**
   
   3) **cat**
 ```
@@ -245,7 +48,7 @@ Although it does not matter where you do this, let us keep files in **~/ASTR288P
      6 7 14
      ^D
 ```
-  Q2-11: How do you display what is in the file **Data2.txt**
+  **Q2-3**: How do you display what is in the file **Data2.txt**
   
   4) your favorite **$EDITOR**
 ```
@@ -283,31 +86,20 @@ Many ways to view a file on the terminal:
      rm        ReMove files (directories would need the -r flag, but see also mkdir)
      ln        LiNk between files (symbolic/soft vs. hard link)
 
-Linking files is like have a convenient shortcut available, e.g.
+
+## UNIX PATH
+
+Any command typed in the terminal will find this from an executable file along the
+directories in the $PATH environment variable:
 
 ```
-	ln -s /etc/passwd               # soft link (can go across devices)
-	ls -l passwd
-	head passwd
+   echo $PATH
+   
+   which ls
+   which man
+   which ds9
+```
 
-	rm passwd
-	ln /etc/passwd                  # hard link (must be on same device)
-```
-Did you get an error in the last attempt?  if you, you are likely trying this across to another device. The **df** command
-tells your devices, or on what device a file lives
-```
-	df .
-	df /etc/passwd
-
-	df
-```
-Lets try this again
-```
-	ls -l ~/.bashrc 
-	ln ~/.bashrc dot-bashrc
-	ls -l ~/.bashrc 
-```
-See something interesting in the second file listing?
 
 ## Scripting:
 
@@ -319,7 +111,7 @@ Scripting in UNIX is nothing more than a few shell commands in a text file, whic
      ls -l hello
 
      chmod +x hello.sh
-     ls -l hello	
+     ls -l hello  
      hello.sh
      echo $PATH
      ./hello.sh
@@ -358,7 +150,7 @@ The columns are:
 Permissions can be broken down into three sections: user, group, other. 
 The first character indicates if it's a directory (**d**), the next three characters correspond to the reqd, write, and execute perimissions for the user, and similarly for the group, and then other. 
 
-**Question**: Describe the details of the above files.
+**Q2-4**: Describe the details of the above files.
 
 ### Changing permissions
 For example:
@@ -386,7 +178,7 @@ A **tarball** is a type of file archive. It is a convenient method of transporti
 ### Extracting an archive
 For this example, we'll download a popular text editor called sublime_text (note that we may need to update the link if a new release is provided): 
 ```
-    cd ~/               # Navigate home
+    cd ~/ASTR288P       # Navigate to our working directory.
     mkdir software      # Make a new directory
     cd software         # Move to it
     wget https://download.sublimetext.com/sublime_text_3_build_3126_x64.tar.bz2 #Download the file
@@ -408,7 +200,7 @@ The flags in being used:
     v : even more Verbose
     f : Filename specifier
 ```
-**Question**:  What changes if you remove a single $$v$$ flag? 
+**Q2-5**:  What changes if you remove a single $$v$$ flag? 
 
 NOTE: In practice, it is not necessary to bunzip the tarball before calling **tar -xf**; the program is smart enough to know what's going on.
 
@@ -422,7 +214,7 @@ To create an archive:
     echo "Test pattern" > software/some_working_directory/test.log
     tar -cvvf my_tarball.tar software/
 ```
-**Question**: What are the contents of my_tarball.tar? (Someone come draw it on the board!)
+**Q2-6**: What are the contents of my_tarball.tar? (Someone come draw it on the board!)
 
 ## Adding to your own $PATH:
 
@@ -442,7 +234,7 @@ We can add directories to the path
     export PATH=~/software/sublime_text_3/:${PATH}
 ```
 
-**Question**: How do you permanently add something to the $PATH?
+**Q2-7**: How do you permanently add something to the $PATH?
 
 ## Variables
 
@@ -472,7 +264,203 @@ alias grep="grep -n --color=auto"
 ```
 Now, when **grep** is called, it calls it with the **-n** and **--color** flags. 
 
+## Links
+
+Linking files is like have a convenient shortcut available, e.g.
+
+```
+  ln -s /etc/passwd               # soft link (can go across devices)
+  ls -l passwd
+  head passwd
+
+  rm passwd
+  ln /etc/passwd                  # hard link (must be on same device)
+```
+
+Did you get an error in the last attempt?  if you, you are likely trying this across to another device. The **df** command
+tells your devices, or on what device a file lives
+
+```
+  df .
+  df /etc/passwd
+
+  df
+```
+
+Lets try this again
+
+```
+  ls -l ~/.bashrc 
+  ln ~/.bashrc dot-bashrc
+  ls -l ~/.bashrc 
+```
+
+See something interesting in the second file listing?
 
 
 
+## UNIX SCRIPTS
 
+recall: a UNIX script is nothing more than a few shell commands in a text file, which you can execute directly using
+the shell (the interpreter). You do need to make that text file executable (**chmod +x**)
+
+Recall from the previous lecture:
+```
+   echo echo hello world > hello
+   chmod +x hello
+   hello
+```
+**Q2-8**:  What happens if you left out the 2nd *echo* in the command that created the script?
+
+**Q2-9**: The following shell commands do something very convoluted. How would you achieve the same result?
+```
+   echo '#! /bin/bash' >> hello
+   tac hello  > hello1
+   mv hello1 hello
+   chmod +x hello
+```   
+   
+
+## PYTHON
+
+The python language often comes natively on your UNIX system.
+Try the following commands in **ipython** (or **python** if you don't have **ipython** yet):
+```
+   LAPTOP> which python
+   LAPTOP> which ipython
+   LAPTOP> ipython
+   In [1]:  import numpy
+   In [2]:  import scipy
+   In [3]:  import astropy
+   In [4]:  import astroML
+   In [5]:  import admit
+   In [6]:  quit
+```
+At some point you might see the message **no module named '...'**
+
+
+   
+## Anaconda and Miniconda
+
+**Miniconda** is a very barebones version of python which you can then tailor to your own needs. See also
+http://conda.pydata.org/miniconda.html.
+If you need more, download the full **Anaconda** version. With this you also get a nice graphical install.
+See https://www.continuum.io
+
+### On Linux:
+```
+  df .
+  wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh 
+  bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+Make sure you do these commands on a locally mounted disk, not NFS (network) mounted!
+
+### On Mac:
+```
+  curl https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh > Miniconda3-latest-MacOSX-x86_64.sh 
+  bash Miniconda3-latest-MacOSX-x86_64.sh
+```
+and now in common to both Linux and Mac you will answer some questions and at the end
+a modification to your **~/.bashrc** file (linux) or **~/.bash_profile** (mac) will be made.
+```
+  export PATH="$HOME/miniconda3/bin:$PATH"
+or
+  setenv PATH "$HOME/miniconda3/bin:$PATH"
+```
+And now make sure your shell is looking at this new python (e.g. **source ~/.bashrc** for your current shell, or open a new shell):
+```
+  which python
+```
+Now continue installing some modules that we will need for future lectures
+```
+  conda install ipython numpy scipy matplotlib notebook ipywidgets networkx
+  conda install astropy
+  conda install jupyter
+
+```
+
+See what modules you have installed:
+```
+  conda list
+```
+
+**Q2-10**:  How many modules are now installed (use basic unix tools)
+  
+
+### "Hello World!" in python
+
+```
+	echo 'print("Hello World!")' > hello.py
+	python hello.py
+```	
+
+Following on our previous **"#!"** example we can avoid having to type the name **python** :
+```
+	#! /usr/bin/python
+	#
+	print("Hello World!")
+```
+or even more general
+```
+	#! /usr/bin/env python
+	#
+	print("Hello World!")
+```
+
+**Q2-11**: What is the difference between the two **#!** versions that *appear* to do the same thing.
+
+### plotting example
+Previously we created a small dataset **Data2.txt** in the **ASTR288P** directory. This is how it should plot
+on your screen
+
+```
+	astr288p/python/tabplot.py Data2.txt
+```
+
+
+
+### C compiler hello world
+
+```
+	cat hello.c
+
+#include <stdio.h>
+
+void main() 
+{
+  printf("Hello World from C!\n");
+}
+
+	gcc -o helloc hello.c
+	ls -l hello.c
+	ls -l helloc
+	helloc
+	more helloc
+	cat helloc
+
+```
+
+**Q2-12**:  cut and paste the C code into your own hello.c and compile and run this program
+
+**Q2-13**:  observe the difference between **more** and **cat**
+
+
+## GRIP
+
+GitHub Readme Instant Preview (GRIP): a command that allows you to preview your
+[*MarkDown*](https://en.wikipedia.org/wiki/Markdown) files (README.md
+by default) in a web browser. These lecture notes are in md
+(*MarkDown*) format, they are simple text files that are a lightweight markup
+language, and they format nicely in a web brosers.
+
+Install and use it as follows
+```
+   pip install grip
+   grip Lecture2.md
+   grip Lecture3.md localhost:6420
+```
+Because python also has a built-in http (web) server, you can now open a URL on
+[http://localhost:6419](http://localhost:6419), or
+[http://localhost:6420](http://localhost:6420) in the second case. Just make sure
+to use unique port numbers.
