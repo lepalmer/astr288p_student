@@ -36,7 +36,7 @@ Various ways, in increasing complexity and varying degrees of success:
 
 * conda
 ```
-	conda install ginga
+	conda install -c astropy ginga
 ```
 * pip
 ```
