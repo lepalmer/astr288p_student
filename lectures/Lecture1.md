@@ -211,3 +211,4 @@ This **Lecture1.md** file is the file you are reading now. Most humans can read 
 https://github.com/SeanCGriffin/astr288p_student/blob/master/lectures/Lecture1.md
   less lectures/Lecture1.md
 
+adding file again
